@@ -1,3 +1,4 @@
+using System.Reflection.Metadata.Ecma335;
 using System.Runtime.InteropServices.ComTypes;
 using System.Text.RegularExpressions;
 using NUnit.Framework;
@@ -8,17 +9,15 @@ namespace Tests
 	[TestFixture]
 	public class Tests
 	{
-		private StringCalculator _stringCalculator;
 		[SetUp]
 		public void Setup()
 		{
-			_stringCalculator = new StringCalculator();
 		}
 
 		[Test]
 		public void when_input_empty_string()
 		{
-			var actual = _stringCalculator.Add(string.Empty);
+			var actual = new StringCalculator().Add(string.Empty);
 			var expected = 0;
 
 			Assert.AreEqual(expected, actual);
@@ -26,7 +25,7 @@ namespace Tests
 		[Test]
 		public void when_pass_1_should_return_1()
 		{
-			var actual = _stringCalculator.Add("1");
+			var actual = new StringCalculator().Add("1");
 			var expected = 1;
 
 			Assert.AreEqual(expected, actual);
@@ -35,7 +34,7 @@ namespace Tests
 		[Test]
 		public void when_pass_1_and_2_should_return_3()
 		{
-			var actual = _stringCalculator.Add("1,2");
+			var actual = new StringCalculator().Add("1,2");
 			var expected = 3;
 
 			Assert.AreEqual(expected, actual);
@@ -43,7 +42,7 @@ namespace Tests
 		[Test]
 		public void processing_addition_with_different_separators()
 		{
-			var actual = _stringCalculator.Add("1,2\n3");
+			var actual = new StringCalculator().Add("1,2\n3");
 			var expected = 6;
 
 			Assert.AreEqual(expected, actual);
@@ -53,7 +52,7 @@ namespace Tests
 		public void support_different_delimiters_with_empty_string()
 		{
 
-			var actual = _stringCalculator.Add(";\n1;2");
+			var actual = new StringCalculator().Add(";\n1;2");
 			var expected = 3;
 
 			Assert.AreEqual(expected, actual);
@@ -73,5 +72,19 @@ namespace Tests
 			Assert.AreEqual(";", separator);
 		}
 
+		[Test]
+		public void calling_add_with_negative_number_is_not_allowed()
+		{
+			var negativeNumberException = Assert.Throws<NegativeNumberException>(() => new StringCalculator().Add("-1,-2"), "negatives not allowed");
+			Assert.That(negativeNumberException.Message, Is.EqualTo("negatives not allowed -1;-2"));
+		}
+
+		[Test]
+		public void number_over_1000_should_be_ignored()
+		{
+			var actual = new StringCalculator().Add("2,1001");
+			var expected = 2;
+			Assert.AreEqual(expected, actual);
+		}
 	}
 }
