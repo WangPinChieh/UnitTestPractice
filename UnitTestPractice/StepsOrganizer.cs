@@ -23,7 +23,9 @@ namespace UnitTestPractice
 			}
 
 			numOfStepsLeft--;
-			return GetNumOfWays(MoveLeft(currentIndex), numOfStepsLeft) + GetNumOfWays(MoveRight(currentIndex), numOfStepsLeft) + GetNumOfWays(Stay(currentIndex), numOfStepsLeft);
+			return GetNumOfWays(MoveLeft(currentIndex), numOfStepsLeft) +
+				   GetNumOfWays(MoveRight(currentIndex), numOfStepsLeft) +
+				   GetNumOfWays(Stay(currentIndex), numOfStepsLeft);
 		}
 
 		private int MoveRight(int currentIndex)
